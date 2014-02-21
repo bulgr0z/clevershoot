@@ -23,6 +23,7 @@
           </div>
           <div class="image-line" ng-repeat="image in $parent.reference.Images">
             <img src="{{image.url}}" alt="" width="64" height="64"/>
+            <div class="name">{{image.url}}</div>
             <div class="jobs">
               <button type="button" class="btn" ng-controller="imageCtrl" ng-click="toggleJob(job.name, image.id)" ng-class="{'btn-danger': !isJobDone(job.name), 'btn-success': isJobDone(job.name)}" ng-repeat="job in shoot.Jobs">{{job.name}}</button>
             </div>
