@@ -1,8 +1,10 @@
 # Clevershoot
 
+#### version 0.0
+
 ## About
 Clevershoot is a small app designed to help photography professionals keeping track of what's been
-done over a large amount of images.
+done over a large amount of images. Clevershoot is based upon the wonderful [Sailsjs](https://github.com/balderdashy/sails/) framework.
 
 Create an account, add a shooting and the corresponding jobs (ex: "Photography", "Photoshop", "Storage")
 and invite some coworkers to work on the tasks you gave them.
