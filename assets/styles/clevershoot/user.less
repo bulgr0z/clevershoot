@@ -1,0 +1,35 @@
+#user-register,
+#user-login {
+
+	//taille des champs de login
+	&:extend(
+		.col-sm-12,
+		.col-md-6,
+		.col-lg-4,
+		.col-md-offset-3,
+		.col-lg-offset-4
+	);
+
+	form {
+
+		button[type="submit"] {
+			&:extend(
+				.col-sm-12,
+				.col-md-12,
+				.col-lg-12
+			);
+		}
+	}
+
+
+}
+
+#user-register {
+	form {
+		// sur la form #register, pousser le btn submit car il n'y
+		// a pas de chkbox au dessus pour aérer
+		button[type="submit"] {
+			margin-top: 15px;
+		}
+	}
+}

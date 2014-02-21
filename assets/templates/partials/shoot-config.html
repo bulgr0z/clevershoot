@@ -1,0 +1,7 @@
+<form role="form" ng-submit="saveConfig()" name="adminForm">
+  <div class="form-group" ng-repeat="job in shoot.Jobs">
+    <label>{{job.name}}</label>
+    <input type="email" class="form-control" ng-model="shoot.Jobs[$index].user" placeholder="email de l'utilisateur">
+  </div>
+  <button type="submit" class="btn btn-default">Sauvegarder</button>
+</form>
