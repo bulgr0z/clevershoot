@@ -15,9 +15,13 @@ module.exports = {
 
 	add: function(req, res) {
 
-
 		var jobs = req.body.jobs;
 		var $jobs = [];
+
+		/*if (req.body.id) {
+			console.log('has id !')
+			return this.update(req, res);
+		}*/
 
 		Shoot.create({
 			name: req.body.name,
@@ -48,14 +52,16 @@ module.exports = {
 		});
 	},
 
-	// Trouver tous les shoots auquel participe le user
-	list: function(req, res) {
+	update: function(req, res) {
+		console.log('update ?')
+	},
 
+	// Trouver tous les shoots auquel participe le user via les jobs auxquels il est enregistré
+	list: function(req, res) {
 		Job.find({User: req.user.id}).populate('Shoot').exec(function(err, jobs) {
 			if (err) console.log('Cannot list jobs : ', err);
 			res.json(jobs)
 		});
-
 	},
 
 	addJob: function(req, res) {
@@ -87,6 +93,7 @@ module.exports = {
 	},
 
 	angularRedirect: function(req, res) {
+
 		var url = req.url.split('/shoot/')[1];
 		res.redirect('/shoot/#/'+url)
 	}

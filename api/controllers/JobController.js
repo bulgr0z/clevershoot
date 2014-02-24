@@ -12,8 +12,7 @@ module.exports = {
 	add: function(req, res) {
 
 		Job.find().populate('images').exec(function(err, job) {
-			if (err) return console.log('Cannot list Jobs : ', err)
-			console.log(jobs);
+			if (err) return res.status('500').send('Cannot list jobs.')
 			res.json(jobs)
 		});
 	},
@@ -21,7 +20,7 @@ module.exports = {
 	list: function(req, res) {
 
 		Job.create(req.body).done(function(err, job) {
-			if (err) return console.log('Cannot add Job : ', err)
+			if (err) return res.status('500').send('Cannot create new job.')
 			res.json(job);
 		})
 	},
@@ -32,7 +31,8 @@ module.exports = {
 		var users = [];
 		req.body.forEach(function(job) {
 			Job.update({id: job.id}, {invited: job.user}).exec(function(err, updatedjob) {
-				console.log('updated job !', updatedjob, err)
+				if (err) return res.status('500').send('Cannot update job.')
+				return res.status('200').send();
 			})
 		})
 

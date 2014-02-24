@@ -1,20 +1,23 @@
 <div ng-include src="'/templates/partials/navbar.html'"></div>
 
-<div ng-if="!hasShoots()">
-  <div ng-include src="'/templates/partials/shoot-add.html'"></div>
-</div>
+<div class="container">
 
-<div ng-if="hasShoots()">
-  <table class="table table-striped">
-    <thead>
-      <tr><th>Intitulé</th><th>Shooting</th></tr>
-    </thead>
-    <tbody>
-      <tr ng-repeat="shoot in shoots">
-        <td>{{shoot.name}}</td>
-        <td><a href="/shoot/{{shoot.Shoot.id}}">Travailler sur ce shoot</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div ng-if="!hasShoots()">
+    <div ng-include src="'/templates/partials/shoot-add.html'"></div>
+  </div>
+
+  <div ng-if="hasShoots()">
+    <table class="table table-striped">
+      <thead>
+        <tr><th>Intitulé</th><th>Shooting</th></tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="shoot in shoots">
+          <td>{{shoot.name}}</td>
+          <td><a href="/shoot/{{shoot.Shoot.id}}">Travailler sur ce shoot</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 

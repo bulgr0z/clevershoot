@@ -108,6 +108,7 @@ module.exports.express = {
 				User.findOne({
 					email: username
 				}).exec(function (err, user) {
+
 					if (user) {
 						User.compare(password, user.password, function(err, success) {
 

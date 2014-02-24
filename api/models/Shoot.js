@@ -26,7 +26,8 @@ module.exports = {
 			via: 'Shoots',
 			dominant: true
 		},*/
-		name: 'string'
+		name: 'string',
+		description: 'string'
 
 	}
 

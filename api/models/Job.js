@@ -8,7 +8,7 @@ module.exports = {
 	attributes: {
 		name: 'string',
 		finished: 'boolean',
-		User: { // devrait etre associé au mail pour des invits faciles
+		User: { // devrait s'appeller Worker, user travaillant sur le job
 			model: 'user'
 		},
 		Shoot: {

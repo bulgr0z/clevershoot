@@ -51,7 +51,7 @@ module.exports = {
 
   port: process.env.PORT || 1337,
 
-
+	mandrillApiKey: 'b0dfc678-266f-4707-a2db-8f66f9c80ece',
 
   // The runtime "environment" of your Sails app is either 'development' or 'production'.
   //

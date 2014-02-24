@@ -26,21 +26,16 @@ module.exports = {
 			required: true
 		},
 		Jobs: {
-			collection: 'job',
-			via: 'User'
+			model: 'job'
 		},
 		Group: {
 			model: "group"
 		}
 	},
 
-	mandrill_key: 'b0dfc678-266f-4707-a2db-8f66f9c80ece',
-
 	invite: function(email, job) {
 
-		console.log('inviting user')
-
-		var mandrill = new MandrillApi(this.mandrill_key, { version : '1.0', secure: false })
+		var mandrill = new MandrillApi(sails.config.mandrillApiKey, { version : '1.0', secure: false })
 		var templateReady = q.defer();
 
 		handlebars.render(
