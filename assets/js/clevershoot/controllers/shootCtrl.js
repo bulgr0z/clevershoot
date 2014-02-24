@@ -22,12 +22,17 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 			if (shoot) return true;
 			return false;
 		}
+		$scope.hasConfig = function() {
+			if (shoot && shoot.id && shoot.Jobs.length) return true;
+			return false;
+		}
 
 		var addForm = {
 			name: ""
 		}
 		var jobs = [];
 
+		// TODO -- DEPRECATED ?
 		$scope.add = function(form) {
 
 			var addForm = $scope.shoot;

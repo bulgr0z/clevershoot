@@ -1,7 +1,4 @@
-/**
- * Job.js
- *
- */
+var q = require('q');
 
 module.exports = {
 
@@ -42,6 +39,67 @@ module.exports = {
 		}
 
 		next();
+	},
+
+  // Takes an array of jobs id, returns the Jobs
+	// @param jobs Array
+  // @returns promise
+	_findJobs: function(jobs) {
+
+		var query = []
+			, $Jobs = q.defer();
+
+		jobs.forEach(function(job) {
+			query.push({id: job});
+		});
+
+		Job.find(jobs).exec(function(err, data) {
+			console.log('Multiple Jobs ?! noice ', err, data);
+			$Jobs.resolve(data);
+		});
+
+		return $Jobs.promise;
+	},
+
+	// Links users to jobs, invites non-registered users
+	// @param users Array [{ <mail@tld> : <jobid> }]
+	// @returns ???
+	_linkUsers: function(links) {
+		console.log('Linking users ', links);
+
+		var jobList = []
+			, userList = []
+			, linkHash = {}
+			, $jobs = q.defer() // promise of a Job list for the links
+			, $users = q.defer() // promise of a User list
+		// build hashes, arrays
+		links.forEach(function(user) {
+			for(var email in user) break;
+			jobList.push(user[email]);
+			userList.push(email);
+			linkHash[user[email]] = email;
+		});
+		// get jobs/users
+		Job.find().where({id: jobList}).exec(function(err, jobs) {
+			$jobs.resolve(jobs);
+		});
+		User.find().where({email: userList}).exec(function(err, users) {
+			$users.resolve(users);
+		});
+
+		q.all([$jobs.promise, $users.promise]).then(function(data) {
+			console.log('Wut ? Git all ? noice ', data)
+
+			// Une fois ca en place, il faut indexOf les users trouvés de ceux demandés
+			// pour lancer les invits appropriées (depuis un mandrill.js de config ?)
+			// Linker les présents aux jobs, ajouter un "invited" aux autres, toussa
+			//
+			// --> Vérifier si "invited" est bien un array ! Il faut pouvoir rejoindre
+			// tous les shoots en meme temps lors de la première co
+		});
+
+		console.log('Job list ', joblist)
+
 	}
 
 };

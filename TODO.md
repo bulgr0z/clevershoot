@@ -16,3 +16,6 @@ Todo :
 	Update de la config d'un shoot
 		ex: changer le nom
 			ajouter/enlever des jobs
+
+Misc :
+	Voir https://github.com/angular/angular.js/issues/1937 pour les problemes de urlencode en POST

@@ -86,6 +86,12 @@ module.exports.routes = {
 		action: 'list'
 	},
 
+	// updates the roles for a shooting (observers & workers)
+	'post /shoot/updateroles/:shoot': {
+		controller: 'Shoot',
+		action: 'updateRoles'
+	},
+
 	'post /job/inviteusers': {
 		controller: 'Job',
 		action: 'inviteusers'

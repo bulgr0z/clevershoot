@@ -50,9 +50,9 @@ module.exports = {
 		//if (req.method === "GET") return res.view();
 	},
 
-	list: function(req, res) {
-		if (req.body.length > 3) { // do not spam mongo
-			User.find().where({'email': {startsWith: req.body.email}}).limit(5).exec(function(err, users) {
+	find: function(req, res) {
+		if (req.query.email && req.query.email.length > 2) { // do not spam mongo
+			User.find().where({'email': {startsWith: req.query.email}}).limit(5).exec(function(err, users) {
 				if (err) req.status(500).send('Cannot search users : '+err);
 				res.json(users);
 			});

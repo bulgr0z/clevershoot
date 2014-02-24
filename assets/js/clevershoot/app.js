@@ -12,9 +12,10 @@ var clevershoot = angular.module('clevershoot', [
 	'clevershootServices'
 ]);
 
-clevershoot.config(['$routeProvider', '$locationProvider',
-	function($routeProvider, $locationProvider) {
+clevershoot.config(['$routeProvider', '$locationProvider', '$httpProvider',
+	function($routeProvider, $locationProvider, $httpProvider) {
 
+		//$httpProvider.defaults.headers.post = {'Content-Type': 'application/x-www-form-urlencoded'};
 		$locationProvider.html5Mode(true);
 
 		$routeProvider.
@@ -31,7 +32,7 @@ clevershoot.config(['$routeProvider', '$locationProvider',
 				templateUrl: '/templates/shoot/index.html'
 			}).
 			when('/:shoot_id/config', {
-				controller: 'shootConfigCtrl',
+				controller: 'shootCtrl',
 				templateUrl: '/templates/shoot/add.html'
 			}).
 			when('/reference/add', {

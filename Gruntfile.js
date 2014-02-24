@@ -63,6 +63,7 @@ module.exports = function(grunt) {
     'js/bower_components/angular-route/angular-route.min.js',
     'js/bower_components/angular-resource/angular-resource.min.js',
     'js/bower_components/dropzone/downloads/dropzone.min.js',
+    'js/bower_components/typeahead.js/dist/typeahead.bundle.min.js',
 
     // All of the rest of your app scripts imported here
     'js/clevershoot/*.js',

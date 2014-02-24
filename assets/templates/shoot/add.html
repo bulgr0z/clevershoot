@@ -2,9 +2,9 @@
 
 <div class="container">
 
-  <div ng-if="hasConfig()" ng-controller="shootConfigCtrl">
+  <div ng-if="isShoot()" ng-controller="jobCtrl">
     <h3>Configurer mes utilisateurs</h3>
-    <div ng-include id="form-shooting-jobs" class="row" src="'/templates/partials/shoot-config.html'"></div>
+    <div ng-include id="form-shooting-jobs" class="row" src="'/templates/job/partials/job-config.html'"></div>
   </div>
 
   <div ng-if="hasConfig()" ng-controller="shootConfigCtrl">

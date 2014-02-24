@@ -9,6 +9,8 @@ var q = require('q');
 
 module.exports = {
 
+
+	// TODO -- DEPRE ? --
 	add: function(req, res) {
 
 		Job.find().populate('images').exec(function(err, job) {
@@ -35,6 +37,12 @@ module.exports = {
 				return res.status('200').send();
 			})
 		})
+
+	},
+
+	addJob: function(type) {
+
+		Job.create()
 
 	}
 
