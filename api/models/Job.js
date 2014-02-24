@@ -35,7 +35,7 @@ module.exports = {
 				if (!user) User.invite(job.invited, job)
 				if (user) Job.update({id: job.id}, {User: user.id}).exec(function(err, data) {
 					console.log('updated JOB USER')
-				})
+				});
 
 			});
 

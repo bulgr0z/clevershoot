@@ -13,15 +13,13 @@ module.exports = {
 		res.view();
 	},
 
+	// Handles the creation of new shooting with its name, description and Jobs list.
+	// Jobs are created here at the same time, but actions (invite, etc..) will be handled
+	// by their specific hooks in models/Job
 	add: function(req, res) {
 
 		var jobs = req.body.jobs;
 		var $jobs = [];
-
-		/*if (req.body.id) {
-			console.log('has id !')
-			return this.update(req, res);
-		}*/
 
 		Shoot.create({
 			name: req.body.name,

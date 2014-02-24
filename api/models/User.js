@@ -14,22 +14,28 @@ var bcrypt = require('bcrypt')
 module.exports = {
 
 	attributes: {
-		username: "string",
+		username: 'string', // self exp
+		// Primary key, we cannot register two users with the same email
 		email: {
-			type: "email",
+			type: 'email',
 			required: true,
 			unique: true,
 			primaryKey: true
 		},
-		password: {
-			type: "string",
+		password: { // self exp
+			type: 'string',
 			required: true
 		},
+		// All the Jobs authorized to the user, regardless of the Shooting
 		Jobs: {
 			model: 'job'
 		},
-		Group: {
-			model: "group"
+		// All the Shoots the user can observe (observing does not require having a job)
+		Shoots: {
+			model: 'shoot'
+		},
+		Group: { // unused
+			model: 'group'
 		}
 	},
 
