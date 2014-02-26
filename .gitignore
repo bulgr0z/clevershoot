@@ -41,7 +41,7 @@
 
 config/connections.js
 config/sessions.js
-
+config/local.js
 
 
 
@@ -68,6 +68,7 @@ config/sessions.js
 
 node_modules
 bower_components
+assets/public
 
 
 

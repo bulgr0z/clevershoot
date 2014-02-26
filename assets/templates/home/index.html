@@ -3,18 +3,26 @@
 <div class="container">
 
   <div ng-if="!hasShoots()">
-    <div ng-include src="'/templates/partials/shoot-add.html'"></div>
+    <h1>Bienvenue ! <small>On dirait que vous ne travaillez sur aucun shooting, desirez-vous en ajouter un ?</small></h1>
+    <a href="/shoot/add" class="btn btn-success btn-lg">Ajouter un nouveau shooting</a>
   </div>
 
   <div ng-if="hasShoots()">
     <table class="table table-striped">
       <thead>
-        <tr><th>Intitulé</th><th>Shooting</th></tr>
+        <tr>
+          <th>Intitulé</th>
+          <th>Shooting</th>
+          <th>Roles</th>
+        </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="shoot in shoots">
-          <td>{{shoot.name}}</td>
-          <td><a href="/shoot/{{shoot.Shoot.id}}">Travailler sur ce shoot</a></td>
+        <tr ng-repeat="(shootid, myshoot) in shoots">
+          <td>{{myshoot[0].name}}</td>
+          <td><a href="/shoot/{{shootid}}">Travailler sur ce shoot</a></td>
+          <td>
+            <span class="label" ng-class="(role.userjob.name) ? 'label-primary' : 'label-warning'" ng-repeat="role in myshoot">{{ printRole(role) }}</span>
+          </td>
         </tr>
       </tbody>
     </table>

@@ -29,7 +29,7 @@ module.exports = {
 			// Do we have a user corresponding to the "invited" string
 			User.findOne({email: job.invited}).exec(function(err, user) {
 				if (err) return console.log('Error checking user invite : ', err)
-				if (!user) User.invite(job.invited, job)
+				if (!user) User._inviteWorker(job.invited, job)
 				if (user) Job.update({id: job.id}, {User: user.id}).exec(function(err, data) {
 					console.log('updated JOB USER')
 				});
@@ -62,23 +62,22 @@ module.exports = {
 	},
 
 	// Links users to jobs, invites non-registered users
-	// @param users Array [{ <mail@tld> : <jobid> }]
-	// @returns ???
+	// @param users Object { <mail@tld> : [<jobid>, <jobid>, ... ] }
 	_linkUsers: function(links) {
-		console.log('Linking users ', links);
 
 		var jobList = []
 			, userList = []
-			, linkHash = {}
 			, $jobs = q.defer() // promise of a Job list for the links
 			, $users = q.defer() // promise of a User list
-		// build hashes, arrays
-		links.forEach(function(user) {
-			for(var email in user) break;
-			jobList.push(user[email]);
-			userList.push(email);
-			linkHash[user[email]] = email;
-		});
+
+		// generate the Job & User id lists, they will be requested in parallel
+		for (var email in links) {
+			userList.push(email)
+			links[email].forEach(function(jobid) {
+				jobList.push(jobid);
+			})
+		}
+
 		// get jobs/users
 		Job.find().where({id: jobList}).exec(function(err, jobs) {
 			$jobs.resolve(jobs);
@@ -88,17 +87,40 @@ module.exports = {
 		});
 
 		q.all([$jobs.promise, $users.promise]).then(function(data) {
-			console.log('Wut ? Git all ? noice ', data)
 
-			// Une fois ca en place, il faut indexOf les users trouvés de ceux demandés
-			// pour lancer les invits appropriées (depuis un mandrill.js de config ?)
-			// Linker les présents aux jobs, ajouter un "invited" aux autres, toussa
-			//
-			// --> Vérifier si "invited" est bien un array ! Il faut pouvoir rejoindre
-			// tous les shoots en meme temps lors de la première co
+			var $jobs = data[0]
+				, $users = data[1];
+
+			// Add each existing User to its Job
+			$users.forEach(function(user) {
+				var userJobs = links[user.email]; // lists the jobs for this particular user
+				if (userJobs.length) { // we still have jobs to link
+
+					for (var i = 0; i < $jobs.length; i++) { // why u no foreach
+						var currentjob = $jobs[i];
+						if (userJobs.indexOf(currentjob.id) > -1) {
+							user.Jobs.add(currentjob.id)
+							user.save(function(err, save) { console.log('Added job for '+save.username); })
+							links[user.email].splice(links[user.email].indexOf(currentjob.id), 1)
+						}
+					}
+				}
+			});
+
+			// For each Job corresponding to an UNKNOWN USER, mark the Job as requiring an invite (-> invited: <user.email>)
+			// The afterUpdate hook will then handle the emailing via User._inviteWorker
+			for (var email in links) {
+				if (links[email].length) {
+					$jobs.forEach(function(job) {
+						if (links[email].indexOf(job.id) > -1) {
+							job.invited = email;
+							job.save(function(err, save) { console.log('Marking job '+save.name+' as requiring invite.'); })
+						}
+					})
+				}
+			}
+
 		});
-
-		console.log('Job list ', joblist)
 
 	}
 

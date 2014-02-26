@@ -28,7 +28,7 @@ module.exports = {
 			Admin: req.user.id
 		}).done(function(err, shoot) {
 
-			// do we have any jobs for this Shoot ? (protip: we should)
+			// do we have any jobs for this Shoot ? (hint: we should)
 			if (jobs.length) {
 				jobs.forEach(function(job) {
 					$jobs.push(Job.create({
@@ -57,11 +57,52 @@ module.exports = {
 	},
 
 	// Trouver tous les shoots auquel participe le user via les jobs auxquels il est enregistré
+	// @returns Object { <shootid> : [ { userjob: Job || null } ] }
 	list: function(req, res) {
-		Job.find({User: req.user.id}).populate('Shoot').exec(function(err, jobs) {
-			if (err) console.log('Cannot list jobs : ', err);
-			res.json(jobs)
+
+		var $jobs = q.defer()
+			, $shoots = q.defer();
+
+		// List every worker role for this user
+		Job.find({User: req.user.email}).populate('Shoot').exec(function(err, jobs) {
+			if (!err) $jobs.resolve(jobs)
 		});
+		// List every observer role for this user
+		Shoot.find({observers: {contains: req.user.email}}).exec(function(err, shoots) {
+			if (!err) $shoots.resolve(shoots)
+		});
+
+		q.all([$jobs.promise, $shoots.promise]).then(function(data) {
+
+			var $jobs = data[0]
+				, $shoots = data[1]
+				, shootings = {}; // response obj
+
+			$shoots.forEach(function(shoot) {
+				if (!shootings[shoot.id]) shootings[shoot.id] = [];
+				shoot = shoot.toObject();
+				shoot.userjob = null;
+				shootings[shoot.id].push(shoot);
+			});
+
+			$jobs.forEach(function(job) {
+				if (!shootings[job.Shoot.id]) shootings[job.Shoot.id] = [];
+
+				var cleanShoot = job.Shoot.toObject();
+				var cleanJob = job.toObject();
+				delete cleanJob.Shoot;
+
+				cleanShoot.userjob = cleanJob;
+				shootings[job.Shoot.id].push(cleanShoot);
+
+			});
+
+			console.log('shootings : ', shootings)
+
+			res.json(shootings)
+
+		});
+
 	},
 
 	addJob: function(req, res) {
@@ -90,62 +131,30 @@ module.exports = {
 
 	updateRoles: function(req, res) {
 
-		/**
-		 * Pas bon, devrait préparer une requete plus propre,
-		 * avec d'un coté les workers et de l'autre les observers.
-		 * Le tout pas dans une boucle de la mort, mais bien groupé comme il faut
-		 *
-		 * Chaque job appartient à un user
-		 * Les jobs sont référencés dans le shoot
-		 * Les observers sont simples "users" du shoot
-		 *
-		 */
-
-		//var $jobs = Job._findJobs();
-
 		var roles = req.query;
 
-		console.log("QUERY ?",typeof req.query)
-
 		// To match users with their roles, we need to separate workers from observers
-		var workers = []
+		var workers = {}
 			, observers = [];
 
 		for (var role in roles) {
-			var $role = JSON.parse(roles[role]);
-			console.log($role, typeof $role)
+			var $role = JSON.parse(roles[role]); // thx angular...
+
 			for (var email in $role) {
 				// no job id is linked for the user, he is an observer
 				if ($role[email] === null) {
 					observers.push(email);
 				} else {
-					workers.push($role);
+					if (!workers[email]) workers[email] = [];
+					workers[email].push($role[email]);
 				}
 			}
 		}
 
 		Job._linkUsers(workers);
+		Shoot._linkObservers(req.params.shoot, observers);
 
 		console.log("Workers : ", workers, "Observers : ", observers);
-
-		/*for (var role in roles) {
-			var $role = roles[role];
-			console.log($role)
-			for (var user in $role) {
-				// observer
-				if ($role[user] === null) {
-
-				} else {
-				// worker
-					Job.find({id: $role[user]}).exec(function(err, data) {
-						console.log('Finding job for ', user);
-						console.log("Job : ", err, data);
-					})
-				}
-			}
-		}*/
-
-		//console.log('UPDATE ROLES', req.body, req.query);
 	},
 
 	angularRedirect: function(req, res) {

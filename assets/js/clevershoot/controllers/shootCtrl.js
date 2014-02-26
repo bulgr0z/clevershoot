@@ -14,13 +14,21 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 
 		// Tester si l'utilisateur est inscrit a des shoots
 		$scope.hasShoots = function() {
-			if (shoots && shoots.length) return true;
+
+			for (var id in shoots) break;
+			if (typeof id !== undefined) return true;
 			return false;
 		};
 		// Le shoot demandé existe-t-il ?
 		$scope.isShoot = function() {
 			if (shoot) return true;
 			return false;
+		}
+		$scope.printRole = function(role) {
+			if (role.userjob && role.userjob.name) {
+				return role.userjob.name
+			}
+			return "Observateur";
 		}
 		$scope.hasConfig = function() {
 			if (shoot && shoot.id && shoot.Jobs.length) return true;
