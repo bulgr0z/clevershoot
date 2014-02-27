@@ -59,6 +59,11 @@ module.exports = {
 		} else {
 			res.json([]);
 		}
+	},
+
+	logout: function(req, res) {
+		req.logout();
+		res.redirect('/');
 	}
 
 };

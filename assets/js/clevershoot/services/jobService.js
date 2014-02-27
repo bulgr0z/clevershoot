@@ -17,6 +17,12 @@ clevershootServices.factory('Job', ['$resource',
 				})
 			},
 
+			list: function(params) {
+				return $resource('/job/list/'+params, {}, {
+					query: {method:'POST', isArray:true}
+				})
+			},
+
 			inviteusers: function(params) {
 				return $resource('/job/inviteusers', {}, {
 					query: {method:'POST', params: params}

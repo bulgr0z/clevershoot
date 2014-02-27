@@ -97,6 +97,11 @@ module.exports.routes = {
 		action: 'inviteusers'
 	},
 
+	'post /job/list/:shooting': {
+		controller: 'Job',
+		action: 'list'
+	},
+
 	'/shoot/get/:id': {
 		controller: 'Shoot',
 		action: 'get'

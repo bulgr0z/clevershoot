@@ -21,7 +21,11 @@ module.exports = {
 			var publicFolder = '/public/uploads/'+ req.params.reference +'/'+req.files.file.originalFilename;
 
 			sourceFolder.pipe(destFolder)
-			sourceFolder.on('end', function() {
+			/*sourceFolder.on('close', function() {
+				console.log('STREAM CLOSED')
+			})*/
+			sourceFolder.on('close', function() {
+
 				// clean temp data
 				fs.unlink(req.files.file.path);
 				// Get a promise for the corresponding Reference

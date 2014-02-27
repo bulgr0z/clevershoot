@@ -18,7 +18,7 @@
       </form>
       <div class="checkbox">
         <label>
-          <input type="checkbox" disabled>Masquer les références où mon travail est terminé
+          <input type="checkbox" checked>Masquer les références où mon travail est terminé
         </label>
       </div>
 
@@ -27,7 +27,7 @@
 
       <div class="reference-list" >
 
-        <div class="panel panel-default" ng-repeat="reference in references">
+        <div class="panel panel-default" ng-class="isCompleted(reference)" ng-repeat="reference in references">
           <div class="panel-heading">Référence #{{reference.reference}}</div>
           <div class="panel-body" ng-controller="imageCtrl">
             <div class="image-add" file-upload="{fuckyou: true}">
