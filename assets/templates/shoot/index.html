@@ -9,7 +9,7 @@
         <div class="form-group">
           <label>Ajouter une référence</label>
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="#492068617465207768617420796f75207374616e6420666f72" name="reference" ng-model="form.reference">
+            <input type="text" class="form-control" placeholder="#ab123cd4" name="reference" ng-model="form.reference">
             <span class="input-group-btn">
               <button class="btn btn-info" type="submit">Ajouter</button>
             </span>
@@ -18,7 +18,7 @@
       </form>
       <div class="checkbox">
         <label>
-          <input type="checkbox" checked>Masquer les références où mon travail est terminé
+          <input type="checkbox" checked disabled>Replier les références où mon travail est terminé
         </label>
       </div>
 
@@ -27,7 +27,7 @@
 
       <div class="reference-list" >
 
-        <div class="panel panel-default" ng-class="isCompleted(reference)" ng-repeat="reference in references">
+        <div class="panel panel-default" ng-class="isCompleted(reference)" ng-repeat="reference in references" toggle-open>
           <div class="panel-heading">Référence #{{reference.reference}}</div>
           <div class="panel-body" ng-controller="imageCtrl">
             <div class="image-add" file-upload="{fuckyou: true}">

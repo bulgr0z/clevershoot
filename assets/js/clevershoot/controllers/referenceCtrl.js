@@ -41,7 +41,7 @@ clevershootControllers.controller('referenceCtrl', ['Reference','Shoot', 'Job', 
 					});
 				});
 
-				return isRefComplete ? "panel-success" : "panel-default";
+				return isRefComplete ? "panel-success closed" : "panel-default";
 
 			}
 		}

@@ -17,7 +17,10 @@ module.exports = {
 
 	list: function(req, res) {
 		console.log('list refs ?', req.query)
-		Reference.find({ Shoot: req.query.shooting }).populate('Images').exec(function(err, refs) {
+		Reference.find({ Shoot: req.query.shooting })
+			.populate('Images')
+			.sort({ createdAt: 'desc' })
+			.exec(function(err, refs) {
 			if (err) return console.log('Cannot list Reference : ', err)
 			console.log(refs);
 			res.json(refs)
