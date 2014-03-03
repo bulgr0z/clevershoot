@@ -40,6 +40,8 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 		}
 		var jobs = [];
 
+		console.log($scope.shoots);
+
 		// TODO -- DEPRECATED ?
 		$scope.add = function(form) {
 
@@ -47,8 +49,11 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 			addForm.jobs = jobs;
 
 			Shoot.add().query(addForm, function(data) {
-				console.log("DATA ? ", data);
+
 				$scope.shoot = data
+				$scope.shoots[data.id] = [];
+				$scope.shoots[data.id].push(data);
+
 				$location.path('/'+ data.id + '/config');
 				// todo associate jobs emails
 			});

@@ -13,6 +13,9 @@ module.exports = {
 	upload: function(req, res) {
 
 		var uploadFolder = path.normalize(__dirname + '/../../assets/public/uploads/'+ req.params.reference);
+		var ext = req.files.file.originalFilename.split('.');
+				ext = ext.slice((ext.length - 1), ext.length);
+		var filename = (new Date().getTime()).toString(16)+'.'+ext;
 
 		fs.mkdir(uploadFolder, 0755, function() {
 			// copy the file
@@ -21,10 +24,7 @@ module.exports = {
 			var publicFolder = '/public/uploads/'+ req.params.reference +'/'+req.files.file.originalFilename;
 
 			sourceFolder.pipe(destFolder)
-			/*sourceFolder.on('close', function() {
-				console.log('STREAM CLOSED')
-			})*/
-			sourceFolder.on('close', function() {
+			destFolder.on('finish', function() {
 
 				// clean temp data
 				fs.unlink(req.files.file.path);
