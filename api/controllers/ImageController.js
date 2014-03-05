@@ -92,7 +92,9 @@ module.exports = {
 
 			Shoot.findOne({id:$job.Shoot}).exec(function(err, $shoot) {
 
-				if ($job.user !== req.user.email && $shoot.Admin !== req.user.email)
+				//console.log('JOB TOGGLE ', $job.user)
+
+				if ($job.User !== req.user.email && $shoot.Admin !== req.user.email)
 					return res.status('500').send('Not enough privileges to toggle '+$img.id);
 
 				if ($img.jobsdone && ($img.jobsdone.indexOf($job.id) > -1)) {
@@ -111,26 +113,5 @@ module.exports = {
 		});
 
 	}
-
-
-
-	/*job: function(req, res) {
-		Image.findOne({
-			id: req.query.id
-		}).done(function(err, img) {
-			if (err) return res.status('500').send('Cannot find jobs for '+req.user.email+' : <'+err+'>');
-			if (img.jobsdone && (img.jobsdone.indexOf(req.query.job) > -1)) {
-				// le job existe, le killer
-				img.jobsdone.splice(img.jobsdone.indexOf(req.query.job), 1);
-			} else {
-				// le job n'existe pas, l'ajouter
-				if (!img.jobsdone) img.jobsdone = [];
-				img.jobsdone.push(req.query.job);
-			}
-			img.save(function(err, img) {
-				res.json(img);
-			});
-		});
-	}*/
 
 };
