@@ -48,6 +48,22 @@ module.exports = {
 		if (req.user) return res.redirect('/shoot/');
 		res.view('user/login', { layout: 'layout-noapp' });
 		//if (req.method === "GET") return res.view();
+	},
+
+	find: function(req, res) {
+		if (req.query.email && req.query.email.length > 2) { // do not spam mongo
+			User.find().where({'email': {startsWith: req.query.email}}).limit(5).exec(function(err, users) {
+				if (err) req.status(500).send('Cannot search users : '+err);
+				res.json(users);
+			});
+		} else {
+			res.json([]);
+		}
+	},
+
+	logout: function(req, res) {
+		req.logout();
+		res.redirect('/');
 	}
 
 };

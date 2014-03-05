@@ -1,37 +1,9 @@
 <div ng-include src="'/templates/partials/navbar.html'"></div>
 
-<div ng-if="isShoot()">
-  <div ng-controller="referenceCtrl">
+<div class="container">
 
-    <form role="form"  ng-submit="add()">
-      <div class="form-group">
-        <label>Ajouter une référence</label>
-        <input type="text" class="form-control" name="reference" ng-model="form.reference">
-      </div>
-      <button type="submit" class="btn btn-default">Valider</button>
-    </form>
-
-    <span ng-if="checked" class="animate-if">No jobs :(</span>
-
-    <div class="reference-list" >
-
-      <div class="panel panel-default" ng-repeat="reference in references">
-        <div class="panel-heading">Reference #{{reference.reference}}</div>
-        <div class="panel-body" ng-controller="imageCtrl">
-          <div class="image-add" file-upload="{fuckyou: true}">
-            <form action="/file-upload" class="dropzone">Upload</form>
-          </div>
-          <div class="image-line" ng-repeat="image in $parent.reference.Images">
-            <img src="{{image.url}}" alt="" width="64" height="64"/>
-            <div class="name">{{image.url}}</div>
-            <div class="jobs">
-              <button type="button" class="btn" ng-controller="imageCtrl" ng-click="toggleJob(job.name, image.id)" ng-class="{'btn-danger': !isJobDone(job.name), 'btn-success': isJobDone(job.name)}" ng-repeat="job in shoot.Jobs">{{job.name}}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
+  <div ng-if="isShoot()">
+    <div ng-include src="'/templates/reference/list.html'"></div>
   </div>
+
 </div>

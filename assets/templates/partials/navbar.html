@@ -1,4 +1,4 @@
-<nav ng-controller="navbarCtrl" class="navbar navbar-default" role="navigation">
+<nav ng-controller="shootCtrl" class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -12,12 +12,12 @@
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown">Mes shootings <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li ng-repeat="shoot in shoots"><a href="/shoot/{{shoot.Shoot.id}}">{{shoot.Shoot.name}}</a></li>
+            <li ng-repeat="(shootid, myshoot) in shoots"><a href="/shoot/{{shootid}}">{{myshoot[0].name}}</a></li>
           </ul>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Logout</a></li>
+        <li><a href="/user/logout">Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

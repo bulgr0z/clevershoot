@@ -22,6 +22,13 @@ clevershootServices.factory('Shoot', ['$resource',
 				return $resource('/shoot/add', {}, {
 					query: {method:'POST', params: params}
 				})
+			},
+
+			// Sauvegarde les roles des utilisateurs sur un shoot (job, observeur, etc...)
+			addRoles: function(id, roles){
+				return $resource('/shoot/updateroles/'+id, {}, {
+					query: {method:'POST', params: roles, isArray: true}
+				})
 			}
 
 		}

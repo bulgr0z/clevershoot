@@ -3,34 +3,41 @@
 clevershootControllers.controller('shootConfigCtrl', ['Shoot','Job','$routeParams','$scope','$location',
 	function(Shoot, Job, $routeParams, $scope, $location) {
 
-		var self = this;
+		// defaults
+		$scope.form = {};
+		$scope.form.role = 'observer';
 
-		var shoot = null;
-		if ($routeParams.shoot_id)
-			shoot = $scope.shoot = Shoot.get({ id: $routeParams.shoot_id }).query(function(err, data) {
-				console.log('got ?', err, data)
-			});
+		var shoot = null
+			, jobs = null;
 
-		$scope.saveConfig = function() {
+		if ($routeParams.shoot_id) {
+			shoot = $scope.shoot = Shoot.get({ id: $routeParams.shoot_id }).query();
+			jobs = $scope.jobs = Job.list($routeParams.shoot_id).query();
+		}
 
-			Job.inviteusers().query(shoot.Jobs, function(data) {
-				console.log('push data', data, $scope)
-				/*$scope.shoot = data
-				$location.path('/'+ data.id + '/config');*/
-				// todo associate jobs emails
+		$scope.addRole = function() {
+
+			Job.add().query({
+				Shoot: $routeParams.shoot_id,
+				User: $scope.form.email,
+				role: $scope.form.role,
+				name: $scope.form.name || 'Observateur'
+			}, function(data) {
+				$scope.jobs.push(data);
+				$scope.configForm.$setPristine();
+				$scope.form.email = null;
+				$scope.form.name = null;
+				$scope.form.role = "observer";
 			});
 
 		}
 
-		$scope.hasConfig = function() {
-
-
-			console.log('has config ?', shoot, $routeParams)
-			console.log('has config CONFIG CONRTOLLER')
-
-			if (shoot && shoot.id && shoot.Jobs.length) return true;
-			return false;
-
+		$scope.filterRoles = function(role) {
+			return function(item) {
+				//console.log('filter role ', role, 'for ', item)
+				return item.role !== 'admin';
+			}
 		}
+
 	}
 ]);

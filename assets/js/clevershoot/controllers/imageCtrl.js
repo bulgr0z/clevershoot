@@ -6,22 +6,24 @@ clevershootControllers.controller('imageCtrl', ['Image','$routeParams','$scope',
 		// l'image est dans $parent.$parent ?? surement un pb de markup
 		$scope.image = $scope.$parent.$parent.image; // wut ?
 
-		$scope.isJobDone = function(jobName) {
+		$scope.isJobDone = function(jobid) {
+
 			var img = $scope.image;
-			if (img.jobsdone && img.jobsdone.indexOf(jobName) > -1) return true;
+			if (img.jobsdone && img.jobsdone.indexOf(jobid) > -1) return true;
 			return false;
 		}
 
-		$scope.toggleJob = function(jobName, image) {
-			Image.toggleJob({job: jobName, id: image}).query({}, function(img) {
+		$scope.toggleJob = function(job, image) {
+
+			Image.toggleJob({job: job, image: image}).query({}, function(img) {
 				$scope.image = img;
-				//console.log("DONE IMG", data)
 			});
 		}
 
-
-		this.list = function() {
-
+		$scope.filterByRole = function(jobName) {
+			return function(item) {
+				return item.role === jobName
+			}
 		}
 
 	}

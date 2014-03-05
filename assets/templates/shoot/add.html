@@ -2,53 +2,22 @@
 
 <div class="container">
 
-  <div ng-if="hasConfig()" ng-controller="shootConfigCtrl">
+  <div ng-if="isShoot()" ng-controller="jobCtrl">
     <h3>Configurer mes utilisateurs</h3>
-    <div ng-include id="form-shooting-jobs" class="row" src="'/templates/partials/shoot-config.html'"></div>
+    <div ng-include id="form-shooting-jobs" class="row" src="'/templates/job/partials/job-config.html'"></div>
   </div>
 
-  <div ng-if="hasConfig()" ng-controller="shootConfigCtrl">
-    <h3>Configurer mon shooting</h3>
-  </div>
   <div ng-if="!hasConfig()" ng-controller="shootConfigCtrl">
     <h3>Ajouter un shooting</h3>
+    <form role="form" id="form-shooting-add" class="row" ng-controller="shootCtrl" ng-submit="add()" name="formShootingAdd">
+      <div class="form-group col-md-5">
+        <label>Intitulé</label>
+        <input type="text" class="form-control" ng-model="shoot.name">
+        <label>Description</label>
+        <textarea name="description" class="form-control" rows="3" ng-model="shoot.description"></textarea>
+        <button type="submit" id="form-shooting-save" class="btn btn-success btn-lg">Sauvegarder mon shooting</button>
+      </div>
+    </form>
   </div>
-
-
-  <form role="form" id="form-shooting-add" class="row" ng-controller="shootCtrl" ng-submit="add()" name="formShootingAdd">
-    <div class="form-group col-md-5">
-      <label>Intitulé</label>
-      <input type="text" class="form-control" ng-model="shoot.name">
-      <label>Description</label>
-      <textarea name="description" class="form-control" rows="3" ng-model="shoot.description"></textarea>
-      <button type="submit" id="form-shooting-save" class="btn btn-success btn-lg">Sauvegarder mon shooting</button>
-    </div>
-
-    <div class="bs-callout bs-callout-info col-md-7">
-      <h4>Ajouter des postes</h4>
-      <p>Vos images traversent plusieures petites mains avant d'être prêtes ? Listez les différents travaux à effectuer ici</p>
-    </div>
-
-    <div class="form-group col-md-7" job-list>
-
-      <div class="col-md-12">
-        <label>Ajoutez autant de postes que vous voulez</label>
-        <div class="input-group">
-          <input type="text" class="form-control" id="job-name" placeholder="ex: retouche">
-          <span class="input-group-btn">
-            <button class="btn btn-info" type="button" id="add-job">Ajouter</button>
-          </span>
-        </div>
-      </div>
-
-      <div class="col-md-12 jobs">
-        <div id="job-list" class="well">
-          <div ng-repeat="job in shoot.Jobs" class="job btn btn-primary btn-lg btn-block" data-toggle="tooltip" data-placement="left" title="Cliquez pour supprimer">{{job.name}}</div>
-        </div>
-      </div>
-
-    </div>
-
-  </form>
 
 </div>

@@ -1,0 +1,26 @@
+<form role="form" name="adminForm" class="col-md-5">
+  <div class="form-group" ng-repeat="job in shoot.Jobs">
+    <label>{{job.name}}</label>
+    <input type="email" class="form-control" ng-model="shoot.Jobs[$index].user" placeholder="email de l'utilisateur travaillant sur {{job.name}}" user-typeahead>
+  </div>
+  <button class="btn btn-info btn-lg col-md-12" id="form-job-observer-btn" add-observer>Ajouter un observateur</button>
+
+  <div class="well" id="observer-list" style="display: none">
+    <div class="input-group">
+      <input type="text" class="form-control" id="observer-email" placeholder="bigboss@client.fr">
+      <span class="input-group-btn">
+        <a class="btn btn-info" type="button" id="add-observer">Ajouter</a>
+      </span>
+    </div>
+  </div>
+
+  <button type="submit" ng-click="saveRoles()" class="btn btn-success btn-lg col-md-12">Sauvegarder les utilisateurs</button>
+</form>
+
+<div class="bs-callout bs-callout-info col-md-7">
+  <h4>Lister les participants</h4>
+  <p>Entrez les adresses email des participants à ce shoot. Si des participants ne
+    sont pas inscrits sur clevershoot, nous les inviterons pour vous.<br>
+    Vous pouvez également inviter des <strong>observateurs</strong> à rejoindre votre
+    shooting : ils pourront voir l'avancement du projet mais pas y participer.</p>
+</div>

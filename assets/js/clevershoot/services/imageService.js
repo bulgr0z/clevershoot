@@ -25,4 +25,5 @@ clevershootServices.factory('Image', ['$resource',
 
 		}
 
-	}]);
+	}]
+);

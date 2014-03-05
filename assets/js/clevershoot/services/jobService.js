@@ -5,15 +5,21 @@ clevershootServices.factory('Job', ['$resource',
 
 		return {
 
-			get: function() {
+			/*get: function() {
 				return $resource('/job/list', {}, {
 					query: {method:'GET', params:{}, isArray:true}
 				})
-			},
+			},*/
 
 			add: function(params) {
 				return $resource('/job/add', {}, {
 					query: {method:'POST', params: params}
+				})
+			},
+
+			list: function(shoot_id) {
+				return $resource('/job/list/'+shoot_id, {}, {
+					query: {method:'POST', isArray:true}
 				})
 			},
 

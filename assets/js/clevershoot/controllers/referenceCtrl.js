@@ -1,11 +1,14 @@
 'use strict';
 
-clevershootControllers.controller('referenceCtrl', ['Reference','Shoot','$routeParams','$scope','$location',
-	function(Reference, Shoot, $routeParams, $scope, $location) {
+clevershootControllers.controller('referenceCtrl', ['Reference','Shoot', 'Job', '$routeParams','$scope','$location',
+	function(Reference, Shoot, Job, $routeParams, $scope, $location) {
 
 		var self = this;
 		var references = $scope.references = Reference.get({ shooting: $routeParams.shoot_id}).query();
 		var shoot = $scope.shoot = Shoot.get({ id: $routeParams.shoot_id }).query();
+		var userjobs = $scope.userjobs = Job.list($routeParams.shoot_id).query();
+
+		console.log(references)
 
 		// les data du controller image proviennent de là pour
 		// etre partagées entre X instances d'un imageCtrl
@@ -27,12 +30,34 @@ clevershootControllers.controller('referenceCtrl', ['Reference','Shoot','$routeP
 
 		}
 
-		this.list = function() {
+		console.log("scope refs", $scope);
 
-			Reference.get().query({}, function() {
+		$scope.isCompleted = function(reference) {
 
-			});
+			if (reference.Images.length) {
 
+				var isRefComplete = true; // did i complete all of my jobs for all of the images
+
+				reference.Images.forEach(function(image) {
+					if (!userjobs.length) return;
+					userjobs.forEach(function(job) {
+						if (image.jobsdone && image.jobsdone.indexOf(job.name) < 0) isRefComplete = false;
+					});
+				});
+
+				return isRefComplete ? "panel-success closed" : "panel-default";
+
+			}
+		}
+
+		$scope.prettyPrintDate = function(date) {
+			date = new Date(date);
+			var minutes = (date.getUTCMinutes() > 9) ? date.getUTCMinutes() : '0'+date.getUTCMinutes().toString();
+			return date.getDate()+'/'
+					+(date.getMonth()+1)+'/'
+					+date.getFullYear()+' - '
+					+date.getUTCHours()+':'
+					+minutes
 		}
 
 	}
