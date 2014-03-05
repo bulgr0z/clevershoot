@@ -13,42 +13,30 @@ module.exports = {
 		res.view();
 	},
 
+	// v0.2
 	// Handles the creation of new shooting with its name, description and Jobs list.
 	// Jobs are created here at the same time, but actions (invite, etc..) will be handled
 	// by their specific hooks in models/Job
 	add: function(req, res) {
 
-		var jobs = req.body.jobs;
-		var $jobs = [];
-
-		console.log("body ", req.body, req.body.jobs)
-
 		Shoot.create({
 			name: req.body.name,
-			Admin: req.user.id
+			Admin: req.user.email
 		}).done(function(err, shoot) {
 
-			// do we have any jobs for this Shoot ? (hint: we should)
-			if (jobs.length) {
-				jobs.forEach(function(job) {
-					$jobs.push(Job.create({
-						name: job
-					}));
-				})
+			if (err) res.send(500, { error: 'Cannot create new shooting <'+err+'>' })
 
-				q.all($jobs).then(function(jobs) {
-					// link our jobs to the Shoot
-					for (var job in jobs) {
-						shoot.Jobs.add(jobs[job].id)
-					}
-					// save the associations & redirect to provide a fully populated Shoot object
-					shoot.save(function(err) {
-						if (err) return console.log('Error updating Shoot model : ', err)
-						res.redirect('/shoot/get/'+shoot.id);
-					})
-				})
+			// add admin job fot this shooting
+			Job.create({
+				name: 'admin',
+				role: 'admin',
+				User: req.user.email,
+				Shoot: shoot.id
+			}).exec(function(err, data) {
+				if (err) res.send(500, { error: 'Cannot create admin job for '+shoot.id+' <'+err+'>' })
+				res.json(shoot);
+			});
 
-			}
 		});
 	},
 
@@ -56,51 +44,36 @@ module.exports = {
 		console.log('update ?')
 	},
 
-	// Trouver tous les shoots auquel participe le user via les jobs auxquels il est enregistré
-	// @returns Object { <shootid> : [ { userjob: Job || null } ] }
+	// v0.2
+	// TODO Associations
+	// TODO Only admin user should be able to see the full Jobs list
+	// Finds every shooting the current registered user can see
+	// @returns Array [ { ... , Jobs: [ {...} ] } ]
 	list: function(req, res) {
 
-		var $jobs = q.defer()
-			, $shoots = q.defer();
+		var $shoots = q.defer();
 
 		// List every worker role for this user
-		Job.find({User: req.user.email}).populate('Shoot').exec(function(err, jobs) {
-			if (!err) $jobs.resolve(jobs)
-		});
-		// List every observer role for this user
-		Shoot.find({observers: {contains: req.user.email}}).exec(function(err, shoots) {
-			if (!err) $shoots.resolve(shoots)
-		});
-
-		q.all([$jobs.promise, $shoots.promise]).then(function(data) {
-
-			var $jobs = data[0]
-				, $shoots = data[1]
-				, shootings = {}; // response obj
-
-			$shoots.forEach(function(shoot) {
-				if (!shootings[shoot.id]) shootings[shoot.id] = [];
-				shoot = shoot.toObject();
-				shoot.userjob = null;
-				shootings[shoot.id].push(shoot);
+		Job.find({User: req.user.email}).exec(function(err, jobs) {
+			if (err) return res.status('500').send('Cannot find jobs for '+req.user.email+' : <'+err+'>');
+			var ids = [];
+			jobs.forEach(function(job) { ids.push(job.Shoot); })
+			Shoot.find({id: ids}).populate('Jobs').exec(function(err, shoots) {
+				if (err) return res.status('500').send('Cannot find '+req.user.email+' shootings : <'+err+'>');
+				if (!err) $shoots.resolve(shoots)
 			});
+		});
 
-			$jobs.forEach(function(job) {
-				if (!shootings[job.Shoot.id]) shootings[job.Shoot.id] = [];
-
-				var cleanShoot = job.Shoot.toObject();
-				var cleanJob = job.toObject();
-				delete cleanJob.Shoot;
-
-				cleanShoot.userjob = cleanJob;
-				shootings[job.Shoot.id].push(cleanShoot);
-
-			});
-
-			console.log('shootings : ', shootings)
-
-			res.json(shootings)
-
+		$shoots.promise.then(function(shoots) {
+			// Without proper associations, we need to manually remove
+			// every Job not belonging to the current user.
+			shoots.forEach(function(shoot, s) {
+				shoot.Jobs.forEach(function(job, j) {
+					if (job.User !== req.user.email)
+						delete shoots[s]['Jobs'][j]
+				});
+			})
+			res.json(shoots);
 		});
 
 	},

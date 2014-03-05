@@ -4,20 +4,21 @@ module.exports = {
 
 	attributes: {
 		name: 'string',
-		finished: 'boolean',
+		finished: 'boolean', // v0.2 TO KILL
 		User: { // devrait s'appeller Worker, user travaillant sur le job
 			model: 'user'
 		},
 		Shoot: {
 			model: 'shoot'
 		},
-		Image: { // to kill ?
+		Image: { // v0.2 TO KILL
 			model: 'Image'
 		},
-		emailSent: {
+		emailSent: { // v0.2 TO KILL
 			type: 'boolean',
 			defaultsTo: false
 		},
+		role: 'string',
 		invited: 'string' // user invité pour le job, en attende de confirmation
 	},
 
@@ -33,7 +34,6 @@ module.exports = {
 				if (user) Job.update({id: job.id}, {User: user.id}).exec(function(err, data) {
 					console.log('updated JOB USER')
 				});
-
 			});
 
 		}

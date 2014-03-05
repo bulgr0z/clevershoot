@@ -8,6 +8,8 @@ clevershootControllers.controller('referenceCtrl', ['Reference','Shoot', 'Job', 
 		var shoot = $scope.shoot = Shoot.get({ id: $routeParams.shoot_id }).query();
 		var userjobs = $scope.userjobs = Job.list($routeParams.shoot_id).query();
 
+		console.log(references)
+
 		// les data du controller image proviennent de là pour
 		// etre partagées entre X instances d'un imageCtrl
 		$scope.images = {};
@@ -28,6 +30,8 @@ clevershootControllers.controller('referenceCtrl', ['Reference','Shoot', 'Job', 
 
 		}
 
+		console.log("scope refs", $scope);
+
 		$scope.isCompleted = function(reference) {
 
 			if (reference.Images.length) {
@@ -46,8 +50,14 @@ clevershootControllers.controller('referenceCtrl', ['Reference','Shoot', 'Job', 
 			}
 		}
 
-		this.list = function() {
-
+		$scope.prettyPrintDate = function(date) {
+			date = new Date(date);
+			var minutes = (date.getUTCMinutes() > 9) ? date.getUTCMinutes() : '0'+date.getUTCMinutes().toString();
+			return date.getDate()+'/'
+					+(date.getMonth()+1)+'/'
+					+date.getFullYear()+' - '
+					+date.getUTCHours()+':'
+					+minutes
 		}
 
 	}

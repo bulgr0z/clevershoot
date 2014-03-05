@@ -3,48 +3,7 @@
 <div class="container">
 
   <div ng-if="isShoot()">
-    <div ng-controller="referenceCtrl">
-
-      <form role="form"  ng-submit="add()">
-        <div class="form-group">
-          <label>Ajouter une référence</label>
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="#ab123cd4" name="reference" ng-model="form.reference">
-            <span class="input-group-btn">
-              <button class="btn btn-info" type="submit">Ajouter</button>
-            </span>
-          </div>
-        </div>
-      </form>
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" checked disabled>Replier les références où mon travail est terminé
-        </label>
-      </div>
-
-
-      <span ng-if="checked" class="animate-if">No jobs :(</span>
-
-      <div class="reference-list" >
-
-        <div class="panel panel-default" ng-class="isCompleted(reference)" ng-repeat="reference in references" toggle-open>
-          <div class="panel-heading">Référence #{{reference.reference}}</div>
-          <div class="panel-body" ng-controller="imageCtrl">
-            <div class="image-add" file-upload="{fuckyou: true}">
-              <form action="/file-upload" class="dropzone">Glissez une image ici pour l'ajouter à la référence</form>
-            </div>
-            <div class="image-line" ng-repeat="image in $parent.reference.Images">
-              <a href="{{image.url}}" target="_blank"><img src="{{image.url}}" alt="" width="64" height="64"/></a>
-              <div class="jobs">
-                <button type="button" class="btn" ng-controller="imageCtrl" ng-click="toggleJob(job.name, image.id)" ng-class="{'btn-danger': !isJobDone(job.name), 'btn-success': isJobDone(job.name)}" ng-repeat="job in shoot.Jobs">{{job.name}}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
+    <div ng-include src="'/templates/reference/list.html'"></div>
   </div>
 
 </div>

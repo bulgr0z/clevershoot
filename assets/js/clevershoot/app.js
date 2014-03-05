@@ -32,8 +32,8 @@ clevershoot.config(['$routeProvider', '$locationProvider', '$httpProvider',
 				templateUrl: '/templates/shoot/index.html'
 			}).
 			when('/:shoot_id/config', {
-				controller: 'shootCtrl',
-				templateUrl: '/templates/shoot/add.html'
+				controller: 'shootConfigCtrl',
+				templateUrl: '/templates/shoot/config.html'
 			}).
 			when('/reference/add', {
 				controller: 'referenceCtrl',

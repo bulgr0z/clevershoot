@@ -1,0 +1,97 @@
+<div ng-controller="referenceCtrl">
+
+  <form role="form"  ng-submit="add()">
+    <div class="form-group">
+      <label>Ajouter une référence</label>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="#ab123cd4" name="reference" ng-model="form.reference">
+            <span class="input-group-btn">
+              <button class="btn btn-info" type="submit">Ajouter</button>
+            </span>
+      </div>
+    </div>
+  </form>
+
+  <span ng-if="checked" class="animate-if">No jobs :(</span>
+
+  <div class="reference-list">
+
+    <table id="references-table" class="table table-striped">
+      <thead>
+        <tr>
+          <th ng-click="sort='reference'; reverse=!reverse">Reference</th>
+          <th ng-click="sort='createdAt'; reverse=!reverse">Date</th>
+          <th ng-click="sort='Images.length'; reverse=!reverse">Images</th>
+          <th ng-click="sort='isDone'; reverse=!reverse">Realisation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="reference in references | orderBy:sort:reverse">
+          <td>{{reference.reference}}</td>
+          <td>{{prettyPrintDate(reference.createdAt)}}</td>
+          <td colspan="2">
+            <table ng-controller="imageCtrl" class="images-table" style="width: 100%">
+              <tr>
+                <td colspan="2">
+                  <div class="image-add" file-upload="{fuckyou: true}">
+                    <form action="/file-upload" class="dropzone">Glissez une image ici pour l'ajouter à la référence</form>
+                  </div>
+                </td>
+              </tr>
+              <tr ng-repeat="image in $parent.reference.Images" ng-class="{'done': image.isDone}">
+                <td>
+                  <div class="image-line"><img src="{{image.url}}" width="64" alt="" class="img-thumbnail" lightbox /></div>
+                </td>
+                <td>
+                  <button type="button" class="jobbtn btn"
+                    ng-controller="imageCtrl"
+                    ng-click="toggleJob(job.id, image.id)"
+                    ng-class="{'btn-warning': !isJobDone(job.id), 'btn-success': isJobDone(job.id)}"
+                    ng-repeat="job in shoot.Jobs | filter:filterByRole('worker')">{{job.name}}</button>
+
+                  <button type="button" class="delbtn btn btn-danger" disabled>Supprimer l'image</button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!--<td>
+      <div class="image-add" file-upload="{fuckyou: true}">
+        <form action="/file-upload" class="dropzone">Glissez une image ici pour l'ajouter à la référence</form>
+      </div>
+      <div class="image-line" ng-repeat="image in reference.Images" ng-controller="imageCtrl">Img</div>
+    </td>
+    <td>
+      <button type="button" class="btn btn-xs"
+              ng-controller="imageCtrl"
+              ng-click="toggleJob(job.name, image.id)"
+              ng-class="{'btn-danger': !isJobDone(job.name), 'btn-success': isJobDone(job.name)}"
+              ng-repeat="job in shoot.Jobs | filter:filterByRole('worker')">{{job.name}}</button>
+    </td>-->
+
+    <!--<div class="panel panel-default" ng-class="isCompleted(reference)" ng-repeat="reference in references" toggle-open>
+      <div class="panel-heading">Référence #{{reference.reference}}</div>
+      <div class="panel-body" ng-controller="imageCtrl">
+        <div class="image-add" file-upload="{fuckyou: true}">
+          <form action="/file-upload" class="dropzone">Glissez une image ici pour l'ajouter à la référence</form>
+        </div>
+        <div class="image-line" ng-repeat="image in $parent.reference.Images">
+          <a href="{{image.url}}" target="_blank"><img src="{{image.url}}" alt="" width="64" height="64"/></a>
+          <div class="jobs">
+            <button type="button" class="btn"
+              ng-controller="imageCtrl"
+              ng-click="toggleJob(job.name, image.id)"
+              ng-class="{'btn-danger': !isJobDone(job.name), 'btn-success': isJobDone(job.name)}"
+              ng-repeat="job in shoot.Jobs | filter:filterByRole('worker')">{{job.name}}</button>
+          </div>
+        </div>
+      </div>
+    </div>-->
+
+  </div>
+
+</div>

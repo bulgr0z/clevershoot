@@ -4,8 +4,8 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 	function(Shoot, $routeParams, $scope, $location) {
 
 		var shoot = null
-			, shoots = null
-			, self = this;
+			, shoots = null;
+
 		// On demande un shoot en particulier
 		if ($routeParams.shoot_id)
 			shoot = $scope.shoot = Shoot.get({ id: $routeParams.shoot_id }).query();
@@ -14,22 +14,25 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 
 		// Tester si l'utilisateur est inscrit a des shoots
 		$scope.hasShoots = function() {
-
-			for (var id in shoots) break;
-			if (typeof id !== undefined) return true;
-			return false;
+			if (!shoots.length) return false;
+			return true;
 		};
+
 		// Le shoot demandé existe-t-il ?
 		$scope.isShoot = function() {
 			if (shoot) return true;
 			return false;
 		}
-		$scope.printRole = function(role) {
-			if (role.userjob && role.userjob.name) {
-				return role.userjob.name
-			}
-			return "Observateur";
+
+		// Is my user Admin for @shoot
+		$scope.isShootAdmin = function(shoot) {
+			var isAdmin = false;
+			shoot.Jobs.forEach(function(job) {
+				if (job.role === 'admin') isAdmin = true;
+			})
+			return isAdmin;
 		}
+
 		$scope.hasConfig = function() {
 			if (shoot && shoot.id && shoot.Jobs.length) return true;
 			return false;
@@ -39,8 +42,6 @@ clevershootControllers.controller('shootCtrl', ['Shoot','$routeParams','$scope',
 			name: ""
 		}
 		var jobs = [];
-
-		console.log($scope.shoots);
 
 		// TODO -- DEPRECATED ?
 		$scope.add = function(form) {

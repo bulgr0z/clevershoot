@@ -1,0 +1,41 @@
+<div ng-if="!hasShoots()">
+  <h1>Bienvenue ! <small>On dirait que vous ne travaillez sur aucun shooting, desirez-vous en ajouter un ?</small></h1>
+  <a href="/shoot/add" class="btn btn-success btn-lg">Ajouter un nouveau shooting</a>
+</div>
+
+<div ng-if="hasShoots()">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Intitulé</th>
+      <th>Roles</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="shoot in shoots">
+      <td><a href="/shoot/{{shoot.id}}">{{shoot.name}}</a></td>
+      <td ng-repeat="job in shoot.Jobs">
+        <span class="label"
+          ng-class="(job.role == 'admin') ? 'label-primary' : 'label-warning'">{{ job.name }}</span>
+      </td>
+      <td>
+        <a href="/shoot/{{shoot.id}}/config" ng-if="isShootAdmin(shoot)">Configurer</a>
+      </td>
+    </tr>
+
+
+    <!--<tr ng-repeat="(shootid, myshoot) in shoots">
+      <td>{{myshoot[0].name}}</td>
+      <td><a href="/shoot/{{shootid}}">Travailler sur ce shoot</a></td>
+      <td>
+        <span class="label" ng-class="(role.userjob.name) ? 'label-primary' : 'label-warning'" ng-repeat="role in myshoot">{{ printRole(role) }}</span>
+      </td>
+    </tr>-->
+    <!--<tr>
+      <td ng-if="myshoot.userjob.role">Admin</td>
+    </tr>-->
+    </tbody>
+  </table>
+</div>
+

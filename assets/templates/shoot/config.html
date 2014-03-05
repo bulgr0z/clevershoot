@@ -1,0 +1,63 @@
+<div ng-include src="'/templates/partials/navbar.html'"></div>
+
+<div class="container">
+
+  <h3>Configurer {{shoot.name}}</h3>
+
+  <div class="col-md-2">@@</div>
+
+  <div class="col-md-8">
+    <div class="bs-callout bs-callout-info col-md-12">
+      <h4>Gérer mes utilisateurs</h4>
+      Ajoutez ou supprimer des personnes votre projet et définissez leur rôle.
+    </div>
+
+    <div class="form-group col-md-12" job-list>
+
+      <div class="col-md-12">
+        <label>Ajoutez autant de postes que vous voulez</label>
+
+        <form name="configForm" class="navbar-form navbar-right" role="search" ng-submit="addRole()" job-config-form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="job-user" placeholder="email@domaine.fr" ng-model="form.email">
+          </div>
+          <div class="form-group">
+            <select class="form-control" ng-model="form.role">
+              <option value="observer">Observateur</option>
+              <option value="worker">Travailleur</option>
+            </select>
+          </div>
+          <div class="form-group hidden" id="work-name">
+            <input type="text" class="form-control" placeholder="email@domaine.fr" id="job-name" ng-model="form.name">
+          </div>
+          <button type="submit" class="btn btn-default">Ajouter</button>
+        </form>
+
+        <br style="clear:both"/>
+
+        <div class="well">
+          <div ng-repeat="job in jobs | filter:filterRoles('worker')"
+               ng-class="{'btn-warning': job.role == 'observer'}"
+               class="job btn btn-primary btn-lg btn-block"
+               data-toggle="tooltip" data-placement="left" title="Cliquez pour supprimer">{{job.User}}&nbsp;<span>[{{job.name}}]</span></div>
+        </div>
+
+
+        <!--<div class="input-group">
+          <input type="text" class="form-control" id="job-name" placeholder="ex: retouche">
+           <span class="input-group-btn">
+             <button class="btn btn-info" type="button" id="add-job">Ajouter</button>
+           </span>
+        </div>-->
+      </div>
+
+      <!--<div class="col-md-12 jobs">
+        <div id="job-list" class="well">
+          <div ng-repeat="job in shoot.Jobs" class="job btn btn-primary btn-lg btn-block" data-toggle="tooltip" data-placement="left" title="Cliquez pour supprimer">{{job.name}}</div>
+        </div>
+      </div>-->
+
+    </div>
+  </div>
+
+</div>

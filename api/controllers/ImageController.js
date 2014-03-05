@@ -1,5 +1,6 @@
 var path = require('path')
-	, fs = require('fs');
+	, fs = require('fs')
+	, q = require('q');
 
 module.exports = {
 
@@ -36,7 +37,7 @@ module.exports = {
 				// create a new Image model
 				Image.create({
 					Reference: req.params.reference,
-					User: req.user.id,
+					User: req.user.email,
 					url: publicFolder
 				}).done(function(err, img) {
 
@@ -63,12 +64,61 @@ module.exports = {
 
 	},
 
-	// toggle un job sur l'image
+	// v0.2
+	// Toggles completion of a job on the image
 	job: function(req, res) {
+
+		var $job = q.defer()
+			, $img = q.defer()
+			, $shoot = q.defer();
+
+		Job.findOne({
+			id: req.query.job
+		}).done(function(err, job) {
+			if (err) return res.status('500').send('Cannot find job '+req.user.job+' : <'+err+'>');
+			$job.resolve(job);
+		});
+
+		Image.findOne({
+			id: req.query.image
+		}).done(function(err, img) {
+			if (err) return res.status('500').send('Cannot find image '+req.user.image+' : <'+err+'>');
+			$img.resolve(img);
+		});
+
+		q.all([$job.promise, $img.promise]).then(function(data) {
+			var $job = data[0]
+				, $img = data[1];
+
+			Shoot.findOne({id:$job.Shoot}).exec(function(err, $shoot) {
+
+				if ($job.user !== req.user.email && $shoot.Admin !== req.user.email)
+					return res.status('500').send('Not enough privileges to toggle '+$img.id);
+
+				if ($img.jobsdone && ($img.jobsdone.indexOf($job.id) > -1)) {
+					// le job existe, le killer
+					$img.jobsdone.splice($img.jobsdone.indexOf($job.id), 1);
+				} else {
+					// le job n'existe pas, l'ajouter
+					if (!$img.jobsdone) $img.jobsdone = [];
+					$img.jobsdone.push($job.id);
+				}
+				$img.save(function(err, img) {
+					res.json(img);
+				});
+			});
+
+		});
+
+	}
+
+
+
+	/*job: function(req, res) {
 		Image.findOne({
 			id: req.query.id
 		}).done(function(err, img) {
-			if (err) return console.log('Cannot apply job to img : ', err)
+			if (err) return res.status('500').send('Cannot find jobs for '+req.user.email+' : <'+err+'>');
 			if (img.jobsdone && (img.jobsdone.indexOf(req.query.job) > -1)) {
 				// le job existe, le killer
 				img.jobsdone.splice(img.jobsdone.indexOf(req.query.job), 1);
@@ -79,8 +129,8 @@ module.exports = {
 			}
 			img.save(function(err, img) {
 				res.json(img);
-			})
+			});
 		});
-	}
+	}*/
 
 };

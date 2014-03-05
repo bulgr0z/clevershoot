@@ -14,7 +14,7 @@ clevershootServices.factory('Shoot', ['$resource',
 
 			list: function() {
 				return $resource('/shoot/list/', {}, {
-					query: {method:'POST', params:{}}
+					query: {method:'POST', params:{}, isArray: true}
 				})
 			},
 
