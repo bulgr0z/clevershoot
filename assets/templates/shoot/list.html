@@ -4,7 +4,7 @@
 </div>
 
 <div ng-if="hasShoots()">
-  <table class="table table-striped">
+  <table class="table table-striped" id="shootings-table">
     <thead>
     <tr>
       <th>Intitulé</th>
@@ -13,28 +13,16 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="shoot in shoots">
-      <td><a href="/shoot/{{shoot.id}}">{{shoot.name}}</a></td>
-      <td ng-repeat="job in shoot.Jobs">
-        <span class="label"
-          ng-class="(job.role == 'admin') ? 'label-primary' : 'label-warning'">{{ job.name }}</span>
-      </td>
-      <td>
-        <a href="/shoot/{{shoot.id}}/config" ng-if="isShootAdmin(shoot)">Configurer</a>
-      </td>
-    </tr>
-
-
-    <!--<tr ng-repeat="(shootid, myshoot) in shoots">
-      <td>{{myshoot[0].name}}</td>
-      <td><a href="/shoot/{{shootid}}">Travailler sur ce shoot</a></td>
-      <td>
-        <span class="label" ng-class="(role.userjob.name) ? 'label-primary' : 'label-warning'" ng-repeat="role in myshoot">{{ printRole(role) }}</span>
-      </td>
-    </tr>-->
-    <!--<tr>
-      <td ng-if="myshoot.userjob.role">Admin</td>
-    </tr>-->
+      <tr ng-repeat="shoot in shoots">
+        <td><a href="/shoot/{{shoot.id}}">{{shoot.name}}</a></td>
+        <td>
+          <a href="/shoot/{{shoot.id}}"><span ng-repeat="job in shoot.Jobs" class="label"
+            ng-class="(job.role == 'admin') ? 'label-primary' : 'label-warning'">{{ job.name }}</span></a>
+        </td>
+        <td>
+          <a href="/shoot/{{shoot.id}}/config" class="btn btn-xs btn-danger" ng-if="isShootAdmin(shoot)">Configurer le shooting</a>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
