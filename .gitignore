@@ -42,6 +42,8 @@
 config/connections.js
 config/sessions.js
 
+assets/public
+
 
 
 
