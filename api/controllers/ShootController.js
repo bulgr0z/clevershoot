@@ -92,8 +92,6 @@ module.exports = {
 
 	get: function(req, res) {
 
-		console.log('list shoot,', req.params.id)
-
 		Shoot.find({
 			id: req.params.id
 		}).populate('Jobs').exec(function(err, myShoot) {
@@ -127,7 +125,6 @@ module.exports = {
 		Job._linkUsers(workers);
 		Shoot._linkObservers(req.params.shoot, observers);
 
-		console.log("Workers : ", workers, "Observers : ", observers);
 	},
 
 	angularRedirect: function(req, res) {
