@@ -1,6 +1,6 @@
 # Clevershoot
 
-#### version 0.0
+#### version 0.2
 
 ## About
 Clevershoot is a small app designed to help photography professionals keeping track of what's been
