@@ -11,8 +11,7 @@ module.exports = {
 
 		reference: {
 			type: 'string',
-			required: true,
-			unique: true
+			required: true
 		},
 		Shoot: {
 			model: 'shoot'
