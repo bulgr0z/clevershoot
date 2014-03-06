@@ -102,10 +102,21 @@ module.exports.routes = {
 		action: 'list'
 	},
 
+	'post /job/update': {
+		controller: 'Job',
+		action: 'update'
+	},
+
+	'post /job/remove': {
+		controller: 'Job',
+		action: 'remove'
+	},
+
 	'/shoot/get/:id': {
 		controller: 'Shoot',
 		action: 'get'
 	}
+
 
   // Custom routes here...
 

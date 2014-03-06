@@ -32,25 +32,24 @@ module.exports = {
 				// Get a promise for the corresponding Reference
 				var myRef = Reference.findOne({
 					id: req.params.reference
-				}).populate('Images');
+				}).populate('Images').done(function(err, ref) {
+					// create a new Image model
+					Image.create({
+						Reference: req.params.reference,
+						Shoot: ref.Shoot,
+						User: req.user.email,
+						url: publicFolder
+					}).done(function(err, img) {
 
-				// create a new Image model
-				Image.create({
-					Reference: req.params.reference,
-					User: req.user.email,
-					url: publicFolder
-				}).done(function(err, img) {
-
-					// link the image to the reference
-					myRef.done(function(err, ref) {
+						// link the image to the reference
 						ref.Images.add(img.id);
 						ref.save(function(err, ref) {
 							if (err) console.log('Cannot associate Image with Reference')
 							res.json(img); // send back clean data to Angular
 						})
-					});
 
-					if (err) return res.send(500); // error, send 500
+						if (err) return res.send(500); // error, send 500
+					});
 				});
 
 			})

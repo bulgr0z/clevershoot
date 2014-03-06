@@ -39,5 +39,21 @@ clevershootControllers.controller('shootConfigCtrl', ['Shoot','Job','$routeParam
 			}
 		}
 
+		$scope.updateJob = function(email, jobid) {
+			console.log('update ', email, ' for ', jobid)
+		}
+
+		$scope.deleteJob = function(jobid, deleted) {
+			Job.remove(jobid).query(function(removed) {
+				if (removed.ok) {
+					$scope.jobs.forEach(function(job, i) {
+						deleted(); // send callback to the directive
+						if (job.id === jobid)
+							$scope.jobs.splice(i, 1);
+					})
+				}
+			});
+		}
+
 	}
 ]);
