@@ -112,6 +112,11 @@ module.exports.routes = {
 		action: 'remove'
 	},
 
+	'post /image/remove': {
+		controller: 'Image',
+		action: 'remove'
+	},
+
 	'/shoot/get/:id': {
 		controller: 'Shoot',
 		action: 'get'

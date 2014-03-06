@@ -21,6 +21,12 @@ clevershootServices.factory('Image', ['$resource',
 				return $resource('/image/job', {}, {
 					query: {method:'POST', params: params}
 				})
+			},
+
+			remove: function(image) {
+				return $resource('/image/remove', {}, {
+					query: {method:'POST', params: {image: image}}
+				})
 			}
 
 		}

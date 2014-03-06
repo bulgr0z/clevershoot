@@ -26,5 +26,16 @@ clevershootControllers.controller('imageCtrl', ['Image','$routeParams','$scope',
 			}
 		}
 
+		$scope.removeImage = function(image) {
+			Image.remove(image.id).query(function(resp) {
+				if (resp.ok) {
+					$scope.$parent.reference.Images.forEach(function(img, i) {
+						if (img.id === image.id)
+							$scope.$parent.reference.Images.splice(i, 1);
+					});
+				}
+			});
+		}
+
 	}
 ]);

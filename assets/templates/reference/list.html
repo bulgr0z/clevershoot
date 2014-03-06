@@ -49,7 +49,7 @@
                     ng-class="{'btn-warning': !isJobDone(job.id), 'btn-success': isJobDone(job.id)}"
                     ng-repeat="job in shoot.Jobs | filter:filterByRole('worker')">{{job.name}}</button>
 
-                  <button type="button" class="delbtn btn btn-danger" disabled>Supprimer l'image</button>
+                  <button type="button" class="delbtn btn btn-danger" delete-image>Supprimer l'image</button>
                 </td>
               </tr>
             </table>

@@ -64,6 +64,42 @@ module.exports = {
 	},
 
 	// v0.2
+	remove: function(req, res) {
+
+		var $img = q.defer()
+			, $shoot = q.defer();
+
+		Image.findOne({
+			id: req.query.image
+		}).done(function(err, image) {
+			if (err || !image) return res.status('500').send('Cannot find image '+req.query.image+' : <'+err+'>');
+			console.log('Image ', image)
+			$img.resolve(image);
+			Shoot.findOne({
+				id: image.Shoot
+			}).done(function(err, shoot) {
+				if (err || !shoot) return res.status('500').send('Cannot find shoot '+image.Shoot+' : <'+err+'>');
+				$shoot.resolve(shoot);
+			})
+		});
+
+		q.all([$img.promise, $shoot.promise]).then(function(data) {
+			$img = data[0];
+			$shoot = data[1];
+
+			if ($shoot.Admin !== req.user.email)
+				return res.status('500').send('Not enough privileges');
+
+			$img.destroy(function(err) {
+				if (err) return res.status('500').send('Could not remove image.');
+				res.json({ok: true});
+			})
+
+		});
+
+	},
+
+	// v0.2
 	// Toggles completion of a job on the image
 	job: function(req, res) {
 
@@ -74,14 +110,14 @@ module.exports = {
 		Job.findOne({
 			id: req.query.job
 		}).done(function(err, job) {
-			if (err) return res.status('500').send('Cannot find job '+req.user.job+' : <'+err+'>');
+			if (err) return res.status('500').send('Cannot find job '+req.query.job+' : <'+err+'>');
 			$job.resolve(job);
 		});
 
 		Image.findOne({
 			id: req.query.image
 		}).done(function(err, img) {
-			if (err) return res.status('500').send('Cannot find image '+req.user.image+' : <'+err+'>');
+			if (err) return res.status('500').send('Cannot find image '+req.query.image+' : <'+err+'>');
 			$img.resolve(img);
 		});
 
