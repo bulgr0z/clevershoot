@@ -1,6 +1,26 @@
 #references-table {
 	thead th {
 		cursor: pointer;
+		-webkit-user-select: none;
+		&.active {
+			position: relative;
+		}
+		&.active::after {
+			position: absolute;
+			display: inline-block;
+			font-family: 'Glyphicons Halflings';
+			font-style: normal;
+			font-weight: 400;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			content: "\e134";
+			right: 15px;
+			top: 10px;
+		}
+		&.active.reverse::after {
+			content: "\e133";
+		}
 	}
 
 	.images-table {
