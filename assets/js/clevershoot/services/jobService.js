@@ -25,7 +25,7 @@ clevershootServices.factory('Job', ['$resource',
 
 			update: function(email, jobid) {
 				return $resource('/job/update', {}, {
-					query: {method:'POST', params: {email: email, job: jobid}}
+					query: {method:'POST', params: {email: email, job: jobid}, isArray: false}
 				})
 			},
 

@@ -53,7 +53,36 @@ module.exports = {
 
 	},
 
+	// v0.2
 	update: function(req, res) {
+
+		var $shoot = q.defer()
+			, $job = q.defer();
+
+		Job.findOne({id: req.query.job}).exec(function(err, job) {
+			if (err || !job.id) return res.status('500').send('Cannot find a job to update <'+err+'>');
+			$job.resolve(job);
+
+
+			Shoot.findOne({id: job.Shoot}).exec(function(err, shoot) {
+				if (err || !shoot.id) return res.status('500').send('Cannot find a shooting for this job <'+err+'>');
+				$shoot.resolve(shoot);
+			});
+		});
+
+		q.all([$shoot.promise, $job.promise]).then(function(data) {
+			$shoot = data[0];
+			$job = data[1];
+
+			if ($shoot.Admin !== req.user.email)
+				return res.status('500').send('Not enough privileges');
+
+			Job.update({id: req.query.job}, {User: req.query.email}).exec(function(err, job) {
+				if (err || !job.length) res.status('500').send('Cannot update job <'+err+'>');
+				res.json(job[0]);
+			});
+
+		});
 
 	},
 

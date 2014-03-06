@@ -25,6 +25,7 @@ clevershoot.directive('editJob', function() {
 
 				btnAccept.on('click', function() {
 					var email = input.find('input').val();
+					container.remove();
 					scope.$parent.updateJob(email, scope.job.id);
 					//console.log('update '+email+' on '+scope.job.name)
 				});
@@ -32,7 +33,6 @@ clevershoot.directive('editJob', function() {
 				btnDiscard.on('click', function() {
 					var email = input.find('input').val();
 					scope.$parent.deleteJob(scope.job.id, function() {
-						console.log('callback');
 						container.remove();
 					});
 				});
