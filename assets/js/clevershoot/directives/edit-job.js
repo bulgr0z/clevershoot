@@ -21,13 +21,12 @@ clevershoot.directive('editJob', function() {
 											'</div>').appendTo(container);
 
 				var btnAccept = $('<button class="btn btn-success" type="button">Valider</button>').appendTo(input.find('.input-group-btn'));
-				var btnDiscard = $('<a class="btn btn-danger">Supprimer</a>').appendTo(container);
+				var btnDiscard = $('<a class="btn btn-danger">Supprimer le poste</a>').appendTo(container);
 
 				btnAccept.on('click', function() {
 					var email = input.find('input').val();
 					container.remove();
 					scope.$parent.updateJob(email, scope.job.id);
-					//console.log('update '+email+' on '+scope.job.name)
 				});
 
 				btnDiscard.on('click', function() {
