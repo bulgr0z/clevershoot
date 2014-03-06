@@ -5,8 +5,9 @@ clevershoot.directive('deleteImage', function() {
 		// responsible for registering DOM listeners as well as updating the DOM
 		link: function(scope, element, attrs) {
 			$(element).on('click', function() {
-				scope.$parent.removeImage(scope.image)
-				//console.log(scope)
+				scope.$parent.removeImage(scope.image, function() {
+					$(element).html('Vous n\'etes pas admin du shooting').prop('disabled', true)
+				})
 			});
 		}
 	};
