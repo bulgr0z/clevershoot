@@ -14,6 +14,7 @@ module.exports = {
 	upload: function(req, res) {
 
 		var uploadFolder = path.normalize(__dirname + '/../../assets/public/uploads/'+ req.params.reference);
+		var tmpSymlinkFolder = path.normalize(__dirname + '/../../.tmp/public/public/'+ req.params.reference);
 		var ext = req.files.file.originalFilename.split('.');
 				ext = ext.slice((ext.length - 1), ext.length);
 		var filename = (new Date().getTime()).toString(16)+'.'+ext;
@@ -29,6 +30,9 @@ module.exports = {
 
 				// clean temp data
 				fs.unlink(req.files.file.path);
+				// ugly : we need a symlink to bypass grunt assets compilation to from /assets to /.tmp
+				// otherwise the image may not be instantly visible to the user
+				fs.symlinkSync(uploadFolder, tmpSymlinkFolder);
 				// Get a promise for the corresponding Reference
 				var myRef = Reference.findOne({
 					id: req.params.reference
