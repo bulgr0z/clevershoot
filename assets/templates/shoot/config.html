@@ -29,18 +29,22 @@
           </div>
           <button type="submit" class="btn btn-success col-md-3">Ajouter</button>
           <div class="form-group hidden col-md-12" id="work-name">
-            <input type="text" class="form-control" placeholder="Retouche" id="job-name" ng-model="form.name">
+            <input type="text" class="form-control" placeholder="Retouche" id="job-name" ng-model="form.name" check-empty-job>
             <label style="vertical-align: bottom;">Renseignez le nom du poste de travail</label>
           </div>
         </form>
 
         <br style="clear:both"/>
 
-        <div class="well">
+        <div class="well" id="job-list">
           <div ng-repeat="job in jobs | filter:filterRoles('worker')"
                ng-class="{'btn-warning': job.role == 'observer'}"
                class="job btn btn-primary btn-lg btn-block"
-               data-toggle="tooltip" data-placement="left" title="Cliquez pour supprimer">{{job.User}}&nbsp;<span>[{{job.name}}]</span></div>
+               data-toggle="tooltip"
+               data-placement="left"
+               tooltip
+               edit-job
+               title="Cliquez pour modifier">{{job.User}}&nbsp;<span class="label label-info">{{job.name}}</span></div>
         </div>
       </div>
 

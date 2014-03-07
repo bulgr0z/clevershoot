@@ -1,5 +1,11 @@
 <div ng-controller="referenceCtrl">
 
+  <div class="alert alert-info alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Au fait !</strong> Vous pouvez classer vos références par date #ean ou par avancée
+    en cliquant sur les entêtes !
+  </div>
+
   <form role="form"  ng-submit="add()">
     <div class="form-group">
       <label>Ajouter une référence</label>
@@ -16,13 +22,13 @@
 
   <div class="reference-list">
 
-    <table id="references-table" class="table table-striped">
+    <table id="references-table" class="table table-striped table-bordered">
       <thead>
         <tr>
-          <th ng-click="sort='reference'; reverse=!reverse">Reference</th>
-          <th ng-click="sort='createdAt'; reverse=!reverse">Date</th>
-          <th ng-click="sort='Images.length'; reverse=!reverse">Images</th>
-          <th ng-click="sort='isDone'; reverse=!reverse">Realisation</th>
+          <th ng-click="sort='reference'; reverse=!reverse" ng-class="{active:sort=='reference', reverse:reverse}">Reference</th>
+          <th ng-click="sort='createdAt'; reverse=!reverse" ng-class="{active:sort=='createdAt', reverse:reverse}">Date</th>
+          <th ng-click="sort='Images.length'; reverse=!reverse" ng-class="{active:sort=='Images.length', reverse:reverse}">Images</th>
+          <th ng-click="sort='isDone'; reverse=!reverse" ng-class="{active:sort=='isDone', reverse:reverse}">Realisation</th>
         </tr>
       </thead>
       <tbody>
@@ -49,7 +55,7 @@
                     ng-class="{'btn-warning': !isJobDone(job.id), 'btn-success': isJobDone(job.id)}"
                     ng-repeat="job in shoot.Jobs | filter:filterByRole('worker')">{{job.name}}</button>
 
-                  <button type="button" class="delbtn btn btn-danger" disabled>Supprimer l'image</button>
+                  <button type="button" class="delbtn btn btn-danger" delete-image>Supprimer l'image</button>
                 </td>
               </tr>
             </table>

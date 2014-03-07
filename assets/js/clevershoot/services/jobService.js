@@ -21,6 +21,18 @@ clevershootServices.factory('Job', ['$resource',
 				return $resource('/job/inviteusers', {}, {
 					query: {method:'POST', params: params}
 				})
+			},
+
+			update: function(email, jobid) {
+				return $resource('/job/update', {}, {
+					query: {method:'POST', params: {email: email, job: jobid}, isArray: false}
+				})
+			},
+
+			remove: function(jobid) {
+				return $resource('/job/remove', {}, {
+					query: {method:'POST', params: {job: jobid}}
+				})
 			}
 
 		}

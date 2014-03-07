@@ -14,6 +14,9 @@ module.exports = {
 		User: {
 			model: 'User'
 		},
+		Shoot: {
+			model: 'Shoot'
+		},
 		jobsdone: { // Les ids des jobs sont ajoutés dans l'array quand ils sont effectués
 			type: 'array'
 		},

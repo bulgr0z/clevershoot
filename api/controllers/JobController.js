@@ -53,8 +53,84 @@ module.exports = {
 
 	},
 
-	addJob: function(type) {
+	// v0.2
+	update: function(req, res) {
 
+		var $shoot = q.defer()
+			, $job = q.defer();
+
+		Job.findOne({id: req.query.job}).exec(function(err, job) {
+			if (err || !job.id) return res.status('500').send('Cannot find a job to update <'+err+'>');
+			$job.resolve(job);
+
+
+			Shoot.findOne({id: job.Shoot}).exec(function(err, shoot) {
+				if (err || !shoot.id) return res.status('500').send('Cannot find a shooting for this job <'+err+'>');
+				$shoot.resolve(shoot);
+			});
+		});
+
+		q.all([$shoot.promise, $job.promise]).then(function(data) {
+			$shoot = data[0];
+			$job = data[1];
+
+			if ($shoot.Admin !== req.user.email)
+				return res.status('500').send('Not enough privileges');
+
+			Job.update({id: req.query.job}, {User: req.query.email}).exec(function(err, job) {
+				if (err || !job.length) res.status('500').send('Cannot update job <'+err+'>');
+				res.json(job[0]);
+			});
+
+		});
+
+	},
+
+	// v0.2
+	remove: function(req, res) {
+
+		var $shoot = q.defer()
+			, $job = q.defer()
+			, $images = q.defer();
+
+		Job.findOne({id: req.query.job}).exec(function(err, job) {
+			if (err || !job.id) return res.status('500').send('Cannot find a job to remove <'+err+'>');
+			$job.resolve(job);
+
+			Shoot.findOne({id: job.Shoot}).exec(function(err, shoot) {
+				if (err || !shoot.id) return res.status('500').send('Cannot find a shooting for this job <'+err+'>');
+				$shoot.resolve(shoot);
+			});
+
+			Image.find({Shoot: job.Shoot}).exec(function(err, images) {
+				if (err || !images.length) return res.status('500').send('Cannot find images for this job <'+err+'>');
+				$images.resolve(images);
+			})
+
+		});
+
+		q.all([$shoot.promise, $job.promise, $images.promise]).then(function(data) {
+			$shoot = data[0]
+			$job = data[1]
+			$images = data[2];
+
+			if ($shoot.Admin !== req.user.email)
+				return res.status('500').send('Not enough privileges');
+
+			// delete this job in the images if it was already marked as "done"
+			$images.forEach(function(image) {
+				if (image.jobsdone && image.jobsdone.length) {
+					image.jobsdone.splice(image.jobsdone.indexOf($job.id), 1);
+					image.save(function(err, image) {console.log('Removed a job for ', image)});
+				}
+			});
+
+			$job.destroy(function(err) {
+				if (err) return res.status('500').send('Cannot delete job <'+err+'>');
+				res.json({ok: true});
+			});
+
+		})
 
 	}
 

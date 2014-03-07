@@ -8,16 +8,18 @@
   </div>
 
   <div ng-if="!hasConfig()" ng-controller="shootConfigCtrl">
-    <h3>Ajouter un shooting</h3>
-    <form role="form" id="form-shooting-add" class="row" ng-controller="shootCtrl" ng-submit="add()" name="formShootingAdd">
-      <div class="form-group col-md-5">
-        <label>Intitulé</label>
-        <input type="text" class="form-control" ng-model="shoot.name">
-        <label>Description</label>
-        <textarea name="description" class="form-control" rows="3" ng-model="shoot.description"></textarea>
-        <button type="submit" id="form-shooting-save" class="btn btn-success btn-lg">Sauvegarder mon shooting</button>
-      </div>
-    </form>
+    <div class="col-md-offset-2 col-md-8">
+      <h3>Ajouter un shooting</h3>
+      <form role="form" id="form-shooting-add" class="row" ng-controller="shootCtrl" ng-submit="add()" name="formShootingAdd">
+        <div class="form-group col-md-12">
+          <label>Intitulé</label>
+          <input type="text" class="form-control" ng-model="shoot.name">
+          <label>Description</label>
+          <textarea name="description" class="form-control" rows="3" ng-model="shoot.description"></textarea>
+          <button type="submit" id="form-shooting-save" class="btn btn-success btn-lg">Sauvegarder et ajouter des utilisateurs</button>
+        </div>
+      </form>
+    </div>
   </div>
 
 </div>
