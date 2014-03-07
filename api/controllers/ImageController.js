@@ -14,7 +14,7 @@ module.exports = {
 	upload: function(req, res) {
 
 		var uploadFolder = path.normalize(__dirname + '/../../assets/public/uploads/'+ req.params.reference);
-		var tmpSymlinkFolder = path.normalize(__dirname + '/../../.tmp/public/public/'+ req.params.reference);
+		var tmpSymlinkFolder = path.normalize(__dirname + '/../../.tmp/public/public/uploads/'+ req.params.reference);
 		var ext = req.files.file.originalFilename.split('.');
 				ext = ext.slice((ext.length - 1), ext.length);
 		var filename = (new Date().getTime()).toString(16)+'.'+ext;
@@ -22,8 +22,8 @@ module.exports = {
 		fs.mkdir(uploadFolder, 0755, function() {
 			// copy the file
 			var sourceFolder = fs.createReadStream(req.files.file.path);
-			var destFolder = fs.createWriteStream(uploadFolder +'/'+req.files.file.originalFilename);
-			var publicFolder = '/public/uploads/'+ req.params.reference +'/'+req.files.file.originalFilename;
+			var destFolder = fs.createWriteStream(uploadFolder +'/'+filename);
+			var publicFolder = '/public/uploads/'+ req.params.reference +'/'+filename;
 
 			sourceFolder.pipe(destFolder)
 			destFolder.on('finish', function() {
@@ -32,7 +32,10 @@ module.exports = {
 				fs.unlink(req.files.file.path);
 				// ugly : we need a symlink to bypass grunt assets compilation to from /assets to /.tmp
 				// otherwise the image may not be instantly visible to the user
-				fs.symlinkSync(uploadFolder, tmpSymlinkFolder);
+				var isDir = fs.existsSync(tmpSymlinkFolder)
+				if (!isDir) fs.mkdirSync(tmpSymlinkFolder, 0755)
+				fs.symlinkSync(uploadFolder+'/'+filename, tmpSymlinkFolder+'/'+filename);
+
 				// Get a promise for the corresponding Reference
 				var myRef = Reference.findOne({
 					id: req.params.reference
