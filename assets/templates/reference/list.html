@@ -33,8 +33,8 @@
       </thead>
       <tbody>
         <tr ng-repeat="reference in references | orderBy:sort:reverse">
-          <td>{{reference.reference}}</td>
-          <td>{{prettyPrintDate(reference.createdAt)}}</td>
+          <td class="ref-number"><span>{{reference.reference}}</span></td>
+          <td class="ref-date">{{prettyPrintDate(reference.createdAt)}}</td>
           <td colspan="2">
             <table ng-controller="imageCtrl" class="images-table" style="width: 100%">
               <tr>
